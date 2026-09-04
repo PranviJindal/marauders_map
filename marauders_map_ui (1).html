@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marauder's Map — UI Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #efe3c8;
+    --parchment-light: #f8f1dc;
+    --parchment-dark: #ddc99e;
+    --ink: #2b1d0e;
+    --ink-soft: #5a4a34;
+    --gold: #a6742c;
+    --gold-bright: #c9962f;
+    --free: #3f6b4a;
+    --free-bg: #e2ecdd;
+    --busy: #963f3f;
+    --busy-bg: #f2dedb;
+    --away: #7a6f5d;
+    --away-bg: #e6e0d2;
+    --line: #c9b48c;
+    --shadow: rgba(43, 29, 14, 0.18);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(166,116,44,0.06), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(166,116,44,0.06), transparent 40%),
+      var(--parchment);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 32px 16px 60px;
+  }
+
+  .frame {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .brand {
+    text-align: center;
+    margin-bottom: 22px;
+  }
+  .brand .compass {
+    width: 46px; height: 46px;
+    margin: 0 auto 10px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    background: var(--parchment-light);
+  }
+  .compass::before {
+    content: "";
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 16px solid var(--gold);
+    transform: rotate(35deg);
+  }
+  .brand h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+    margin: 0 0 4px;
+    color: var(--ink);
+  }
+  .brand p {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin: 0;
+    letter-spacing: 0.3px;
+  }
+
+  /* View toggle - wax seal tabs */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    background: var(--parchment-dark);
+    padding: 5px;
+    border-radius: 999px;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 9px 0;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--ink-soft);
+    transition: all 0.25s ease;
+    border: none;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+  }
+  .tab.active {
+    background: var(--ink);
+    color: var(--parchment-light);
+    box-shadow: 0 2px 6px var(--shadow);
+  }
+
+  .panel { display: none; animation: fadeIn 0.35s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Search */
+  .search {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--parchment-light);
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .search::placeholder { color: var(--ink-soft); opacity: 0.7; }
+
+  /* Trail connector */
+  .trail-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--gold);
+    font-weight: 600;
+    margin: 4px 2px 10px;
+  }
+
+  /* Professor card */
+  .prof-card {
+    background: var(--parchment-light);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 1px 3px var(--shadow);
+    position: relative;
+  }
+  .prof-card::before {
+    content: "";
+    position: absolute;
+    left: -1px; top: 50%;
+    width: 10px; height: 10px;
+    background: var(--parchment);
+    border-right: 1px dashed var(--line);
+    transform: translateY(-50%);
+  }
+  .avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--parchment-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+  .prof-info { flex: 1; min-width: 0; }
+  .prof-name {
+    font-size: 14.5px;
+    font-weight: 600;
+    margin: 0 0 2px;
+    color: var(--ink);
+  }
+  .prof-loc {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    margin-top: 6px;
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+  .free { background: var(--free-bg); color: var(--free); }
+  .free .status-dot { background: var(--free); animation: pulse 1.8s infinite; }
+  .busy { background: var(--busy-bg); color: var(--busy); }
+  .away { background: var(--away-bg); color: var(--away); }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(63,107,74,0.4); }
+    50% { box-shadow: 0 0 0 4px rgba(63,107,74,0); }
+  }
+
+  .action-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .btn-queue {
+    background: var(--ink);
+    color: var(--parchment-light);
+  }
+  .btn-queue:hover { background: var(--gold); }
+  .btn-queued {
+    background: var(--parchment-dark);
+    color: var(--ink-soft);
+  }
+  .btn-disabled {
+    background: var(--parchment-dark);
+    color: var(--ink-soft);
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Professor view */
+  .self-card {
+    background: var(--ink);
+    color: var(--parchment-light);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 18px;
+  }
+  .self-card .prof-name { color: var(--parchment-light); font-size: 16px; }
+  .self-card .prof-loc { color: var(--parchment-dark); }
+
+  .status-toggle {
+    display: flex;
+    gap: 6px;
+    margin-top: 16px;
+  }
+  .status-opt {
+    flex: 1;
+    padding: 10px 6px;
+    border-radius: 9px;
+    border: 1.5px solid rgba(239,227,200,0.25);
+    background: transparent;
+    color: var(--parchment-dark);
+    font-size: 11.5px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s ease;
+  }
+  .status-opt.selected.opt-free { background: var(--free); border-color: var(--free); color: white; }
+  .status-opt.selected.opt-busy { background: var(--busy); border-color: var(--busy); color: white; }
+  .status-opt.selected.opt-away { background: var(--away); border-color: var(--away); color: white; }
+
+  .auto-note {
+    font-size: 11px;
+    color: var(--parchment-dark);
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(239,227,200,0.2);
+  }
+  .auto-note b { color: var(--gold-bright); }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 10px;
+    color: var(--ink);
+  }
+
+  .queue-item {
+    background: var(--parchment-light);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+  .queue-item .qname { font-weight: 600; }
+  .queue-item .qtime { font-size: 11px; color: var(--ink-soft); font-family: 'JetBrains Mono', monospace; }
+  .queue-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-right: 10px;
+  }
+  .queue-left { display: flex; align-items: center; }
+
+  .empty-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-soft);
+    padding: 18px 0;
+    font-style: italic;
+  }
+
+  .footer-note {
+    text-align: center;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    margin-top: 26px;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="brand">
+    <div class="compass"></div>
+    <h1>Marauder's Map</h1>
+    <p>know before you walk</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('student')">Student View</button>
+    <button class="tab" onclick="switchTab('professor')">Professor View</button>
+  </div>
+
+  <!-- STUDENT VIEW -->
+  <div class="panel active" id="student">
+    <input class="search" placeholder="Search professor or subject...">
+    <div class="trail-label">⋯ nearby faculty ⋯</div>
+
+    <div class="prof-card">
+      <div class="avatar">RK</div>
+      <div class="prof-info">
+        <p class="prof-name">Dr. R. Krishnan</p>
+        <p class="prof-loc">SJT · Block 14 · Cabin 412</p>
+        <span class="status-pill free"><span class="status-dot"></span>Free to approach</span>
+      </div>
+      <button class="action-btn btn-disabled">Walk over</button>
+    </div>
+
+    <div class="prof-card">
+      <div class="avatar">SM</div>
+      <div class="prof-info">
+        <p class="prof-name">Dr. S. Menon</p>
+        <p class="prof-loc">TT · Block 3 · Cabin 108</p>
+        <span class="status-pill busy"><span class="status-dot"></span>In class till 2:30</span>
+      </div>
+      <button class="action-btn btn-queue" onclick="this.textContent='Queued ✓'; this.className='action-btn btn-queued'">Join queue</button>
+    </div>
+
+    <div class="prof-card">
+      <div class="avatar">AV</div>
+      <div class="prof-info">
+        <p class="prof-name">Dr. A. Varma</p>
+        <p class="prof-loc">GDN · Block 1 · Cabin 220</p>
+        <span class="status-pill away"><span class="status-dot"></span>Not on campus</span>
+      </div>
+      <button class="action-btn btn-disabled">Unavailable</button>
+    </div>
+  </div>
+
+  <!-- PROFESSOR VIEW -->
+  <div class="panel" id="professor">
+    <div class="self-card">
+      <p class="prof-name">Dr. S. Menon</p>
+      <p class="prof-loc">TT · Block 3 · Cabin 108</p>
+      <div class="status-toggle">
+        <button class="status-opt opt-free" onclick="setStatus(this,'free')">Free</button>
+        <button class="status-opt selected opt-busy" onclick="setStatus(this,'busy')">Busy</button>
+        <button class="status-opt opt-away" onclick="setStatus(this,'away')">Off campus</button>
+      </div>
+      <p class="auto-note"><b>Auto-detected:</b> In class (Timetable) until 2:30 PM — toggle overrides this manually.</p>
+    </div>
+
+    <p class="section-title">Waiting to see you (2)</p>
+    <div class="queue-item">
+      <div class="queue-left">
+        <div class="queue-num">1</div>
+        <div>
+          <div class="qname">Priya S. — 21BCE1234</div>
+          <div class="qtime">Joined 8 min ago</div>
+        </div>
+      </div>
+    </div>
+    <div class="queue-item">
+      <div class="queue-left">
+        <div class="queue-num">2</div>
+        <div>
+          <div class="qname">Arjun K. — 21BCE0871</div>
+          <div class="qtime">Joined 3 min ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="footer-note">reference mockup · not the final build</p>
+</div>
+
+<script>
+  function switchTab(view) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(view).classList.add('active');
+  }
+
+  function setStatus(btn, type) {
+    document.querySelectorAll('.status-opt').forEach(b => {
+      b.classList.remove('selected');
+    });
+    btn.classList.add('selected');
+  }
+</script>
+
+</body>
+</html>
